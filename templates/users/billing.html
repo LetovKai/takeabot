@@ -1,0 +1,126 @@
+{% extends "wrapper.html" %}
+{% load static %}
+
+  {% block content %}
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Profile</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+          <li class="breadcrumb-item">Users</li>
+          <li class="breadcrumb-item active">Profile</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section profile">
+      <div class="row">
+        <div class="col-xl-4">
+
+          <div class="card">
+            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+                {% if user.photo %}
+              <img src="{{ user.photo.url }}" alt="Profile" class="rounded-circle">
+                {% else %}
+                    <img src="{% static 'assets/img/profile-img.png' %}" alt="Profile" class="rounded-circle">
+                {% endif %}
+                {% if user.first_name %}
+              <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+                {% else %}
+              <h2>{{ user.username }}</h2>
+                {% endif %}
+              <h3>{{ user.email }}</h3>
+                <h4>{{ user.status }}</h4>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-xl-8">
+
+          <div class="card">
+            <div class="card-body pt-3">
+              <!-- Bordered Tabs -->
+              <ul class="nav nav-tabs nav-tabs-bordered">
+
+                <li class="nav-item">
+                  <a href="{% url 'users:profile' %}" class="button nav-link">Company info</a>
+                </li>
+
+                <li class="nav-item">
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
+                </li>
+
+              </ul>
+
+              <div class="tab-content pt-2">
+
+                <div class="tab-pane fade profile-edit pt-3" id="profile-overview">
+
+                  <!-- Profile Edit Form -->
+                  <form method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                    <div class="row mb-3">
+                      <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
+                      <div class="col-md-8 col-lg-9">
+                          <input type="file" name="{{ form.photo.name }}" accept="image/*" style="display: none;" id="{{ form.photo.id_for_label }}">
+                          <img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'assets/img/profile-img.png' %}{% endif %}" alt="Profile" class="rounded-circle" onclick="document.getElementById('{{ form.photo.id_for_label }}').click();">
+                      </div>
+                    </div>
+                  <div class="form-error">{{ form.non_field_errors }}</div>
+                    {% for f in form %}
+                        {% if f.name != 'photo' %}
+                    <div class="row mb-3">
+                      <label for="{{ f.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">{{ f.label }}</label>
+                      <div class="col-md-8 col-lg-9">
+                          {{ f }}
+                       </div>
+                        {% if f.errors %}
+                        <div class="alert alert-danger" role="alert">{{ f.errors }}</div>
+                        {% endif %}
+                    </div>
+                        {% endif %}
+                    {% endfor %}
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                  </form><!-- End Profile Edit Form -->
+
+              </div>
+
+                <div class="tab-pane fade show active profile-edit pt-3" id="profile-change-password"></div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-error">{{ form.non_field_errors }}</div>
+                        {% for f in form %}
+                                        <div class="row mb-3">
+                                          <label for="{{ f.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">{{ f.label }}</label>
+                                          <div class="col-md-8 col-lg-9">
+                                              {{ f }}
+                                           </div>
+                                            {% if f.errors %}
+                                            <div class="alert alert-danger" role="alert">{{ f.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                        {% endfor %}
+                    <div class="text-center">
+                        <p><button type="submit" class="btn btn-primary">Change password</button></p>
+                    </div>
+                    </form>
+            </div><!-- End Bordered Tabs -->
+
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+    {% endblock %}
+{% block script %}
+
+
+{% endblock %}

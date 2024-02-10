@@ -1,0 +1,21 @@
+{
+    "compare_prices_task": {
+        "task": "core.tasks.compare_prices_task",
+        "schedule": {
+            "seconds": 120
+        }
+    },
+    "collect_data_task": {
+        "task": "mybot.parser.parse_all",
+        "schedule": {
+            "seconds": 86400
+        },
+        "args": ["cate_value"]
+    },
+    "sales_update_task": {
+        "task": "core.tasks.sales_update_task",
+        "schedule": {
+            "seconds": 5400
+        }
+    }
+}
